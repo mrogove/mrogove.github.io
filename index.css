@@ -8,17 +8,23 @@ body {
 	background-color:rgba(47, 79, 44, 0.5);
 	padding:1rem;
 	margin:1rem;
-/* */
+	max-width: 1000px;
+	margin: 0 auto;
+	vertical-align: middle;
 }
 
 #second {
 	color:white;
+	font-family: 'Abel', sans-serif;
+	font-size:8rem;
 	text-align: center;
 }
 
 #third {
 	color:white;
 	text-align: center;
+	font-family: 'Abel', sans-serif;
+	font-size: 4rem;
 }
 
 /*
