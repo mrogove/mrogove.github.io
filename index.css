@@ -1,0 +1,28 @@
+body {
+	background-image: url('http://31.media.tumblr.com/f6c67ec2821a91051e4175f8a102e1e2/tumblr_n6rzpcsMk41st5lhmo1_1280.jpg');
+	background-size: cover;
+	background-position: center;
+}
+
+#main {
+	background-color:rgba(47, 79, 44, 0.5);
+	padding:1rem;
+	margin:1rem;
+/* */
+}
+
+#second {
+	color:white;
+	text-align: center;
+}
+
+#third {
+	color:white;
+	text-align: center;
+}
+
+/*
+margins
+
+
+*/
