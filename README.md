@@ -1,4 +1,7 @@
 mrogove.github.io
 =================
 
-personal
+Basic one pager for personal information hosted at mrogove.github.io
+
+=================
+
