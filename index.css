@@ -1,23 +1,25 @@
 body {
-	background-image: url('http://31.media.tumblr.com/f6c67ec2821a91051e4175f8a102e1e2/tumblr_n6rzpcsMk41st5lhmo1_1280.jpg');
-	background-size: cover;
+	background-image: url('114H.jpg');
+	background-size: 100% auto;
 	background-position: center;
 }
 
 #box {
-	background-color:rgba(47, 79, 44, 0.5);
+	background-color:rgba(0, 178, 146, 0.2);
 	padding:1rem;
+	margin-top:3rem;
 	margin:1rem;
 	max-width: 800px;
 	margin: 0 auto;
-	vertical-align: middle;
+	vertical-align: bottom;
+
 }
 
 #second {
 	color:white;
 	font-family: 'Abel', sans-serif;
 	font-size:8rem;
-	text-align: left;
+	text-align: center;
 }
 
 #third {
