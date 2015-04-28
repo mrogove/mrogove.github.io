@@ -194,34 +194,6 @@ div a {
 
     });
 
-    /*
-    d3.csv("bikes.csv", function(error, csv) {
-
-      var data = d3.nest()
-        .key(function(d) { return d.date; })
-        .rollup(function(d) { return d3.sum(d, function(d) {return d.totalVolume}); })
-        .map(csv);
-
-      var values = [];
-      for (var k in data) {
-        values.push(data[k]);
-      }
-      console.log(values);
-
-      //var minDomain = d3.max(data);
-      //console.log(minDomain);
-      // var maxDomain = d3.max(data, function(d) {return +d});
-      // color.domain([200,4000]);
-      color.domain(d3.extent(values));
-
-
-
-      rect.filter(function(d) { return d in data; })
-          .attr("class", function(d) { return "day " + color(data[d]); })
-        .select("title")
-          .text(function(d) { return d + ": " + percent(data[d]); });
-    });
-    */
     function monthPath(t0) {
       var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
           d0 = +day(t0), w0 = +week(t0),

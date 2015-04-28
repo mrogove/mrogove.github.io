@@ -1,0 +1,40 @@
+<meta charset="utf-8">
+<head>
+	<link rel="stylesheet" type="text/css" href="metgraph.css">
+	<link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src='metricsgraphics.min.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='highlight.pack.js'></script>
+
+
+	<title>Potholes</title>
+</head>
+
+<body>
+	<div id="mainContainer">
+ 		<div id="graph">
+ 			"Hello World"
+		 <script>
+
+			d3.json('fake_users2.json', function(data) {
+		    for (var i = 0; i < data.length; i++) {
+		        data[i] = MG.convert.date(data[i], 'date');
+		    }
+		    // MG.data_graphic({
+		    //     title: "Multi-Line Chart",
+		    //     description: "This line chart contains multiple lines.",
+		    //     data: data,
+		    //     width: 600,
+		    //     height: 200,
+		    //     right: 40,
+		    //     target: '#fake_users2',
+		    //     legend: ['Line 1','Line 2','Line 3'],
+		    //     legend_target: '.legend'
+		  	 //  });
+			});
+		</script>
+		</div>
+	</div>
+</body>
