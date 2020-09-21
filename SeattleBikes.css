@@ -1,0 +1,70 @@
+body {
+  font: 10px sans-serif;
+  shape-rendering: crispEdges;
+  background-image: url('bicycle-362171_1920.jpg');
+  background-size: 140% auto;
+}
+
+/*  rgba(117, 149, 173, 0.5);
+(141, 168, 196, 0.5)
+*/
+
+#mainContainer {
+  width: 1000px;
+  margin: 0 auto;
+}
+#descripTitle {
+  color:white;
+  max-width: 850px;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size:2.5rem;
+  text-align: center;
+  background-color: rgba(117, 149, 173, 0.8);
+  margin: 0 auto;
+}
+#time-series {
+  width: 960px;
+  margin: 0 auto;
+}
+#textContent {
+  color:white;
+  max-width: 850px;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 300;
+  font-size:1rem;
+  text-align: left;
+  background-color: rgba(117, 149, 173, 0.8);
+  padding:0.1rem 1rem;
+  margin: 0 auto;
+  text-align: justify;
+}
+div a {
+  color: white;
+}
+
+.day {
+  fill: #fff;
+  stroke: #ccc;
+}
+
+.day-empty {
+  fill: #fff;
+  stroke: #fff;
+}
+
+.month {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+.RdYlGn .q0-9 { fill:rgb(247,251,255); }
+.RdYlGn .q1-9 { fill:rgb(222,235,247); }
+.RdYlGn .q2-9 { fill:rgb(198,219,239); }
+.RdYlGn .q3-9 { fill:rgb(158,202,225); }
+.RdYlGn .q4-9 { fill:rgb(107,174,214); }
+.RdYlGn .q5-9 { fill:rgb(66,146,198); }
+.RdYlGn .q6-9 { fill:rgb(33,113,181); }
+.RdYlGn .q7-9 { fill:rgb(8,81,156); }
+.RdYlGn .q8-9 { fill:rgb(8,48,107); } 
