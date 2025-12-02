@@ -2,89 +2,128 @@ var width = 960,
     height = 136,
     cellSize = 17; // cell size
 
-var day = d3.time.format("%w"),
-    week = d3.time.format("%U"),
+var dayFormat = d3.timeFormat("%w"),
+    weekFormat = d3.timeFormat("%U"),
     percent = d3.format(".1%"),
-    format = d3.time.format("%Y-%m-%d");
+    format = d3.timeFormat("%Y-%m-%d");
 
-var color = d3.scale.quantize()
+// Helper functions to get numeric day and week values
+var day = function(d) { return +dayFormat(d); };
+var week = function(d) { return +weekFormat(d); };
+
+var color = d3.scaleQuantize()
     .range(d3.range(9).map(function(d) { return "q" + d + "-9"; }));
 
-var thisyear = new Date();
-thisyear = thisyear.getFullYear()+1;
-
-var svg = d3.select("div#time-series").selectAll("svg")
-    .data(d3.range(2012, thisyear))
-  .enter().append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("class", "RdYlGn")
-  .append("g")
-    .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
-
-svg.append("text")
-    .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
-    .style("text-anchor", "middle")
-    .style("fill", "#fff")
-    .style("font-size", "30px")
-    .text(function(d) { return d; });
-
-var rect = svg.selectAll(".day")
-    .data(function(d) { return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-  .enter().append("rect")
-    .attr("class", "day")
-    .attr("width", cellSize)
-    .attr("height", cellSize)
-    .attr("x", function(d) { return week(d) * cellSize; })
-    .attr("y", function(d) { return day(d) * cellSize; })
-    .datum(format);
-
-rect.append("title")
-    .text(function(d) { return d; });
-
-svg.selectAll(".month")
-    .data(function(d) { return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
-  .enter().append("path")
-    .attr("class", "month")
-    .attr("d", monthPath);
-
-d3.json("https://data.seattle.gov/api/views/eytj-7qg9/rows.json", function(e, j) {
-  var initialData = j.data;
-  var finalData = {};
-
-  var finalList = [];
-
-  // Iterate over all rows of data
-  for (var i=0; i < initialData.length; i++) {
-    // Isolate the day
-    var datum = initialData[i];
-
-    // Sum the counts
-    var sum = parseInt(datum[9]) + parseInt(datum[10]);
-    
-    // Parse the date
-    var date = datum[8];
-    var parsedDate = date.split('T')[0];
-
-    // Map from key (date) to value (sum)
-    finalData[parsedDate] = sum;
+d3.csv("Fremont_Bridge_Bicycle_Counter_20251202.csv").then(function(data) {
+  if (!data) {
+    console.error("No data loaded");
+    return;
   }
 
+  var finalData = {};
+  var dailyTotals = {};
+  var minYear = 9999;
+  var maxYear = 0;
+
+  // Iterate over all rows of data
+  for (var i = 0; i < data.length; i++) {
+    var datum = data[i];
+    
+    // Skip rows with missing data
+    var totalStr = datum["Fremont Bridge Sidewalks, south of N 34th St Total"];
+    if (!totalStr || totalStr.trim() === "") {
+      continue;
+    }
+    
+    // Parse the date and time
+    var dateTimeStr = datum["Date"];
+    if (!dateTimeStr || dateTimeStr.trim() === "") {
+      continue;
+    }
+    
+    var parts = dateTimeStr.split(" ");
+    var dateStr = parts[0]; // Get MM/DD/YYYY format
+    
+    // Convert MM/DD/YYYY to YYYY-MM-DD
+    var dateParts = dateStr.split("/");
+    if (dateParts.length === 3) {
+      var monthNum = dateParts[0];
+      var dayNum = dateParts[1];
+      var yearNum = dateParts[2];
+      var parsedDate = yearNum + "-" + ("0" + monthNum).slice(-2) + "-" + ("0" + dayNum).slice(-2);
+      
+      var year = parseInt(yearNum);
+      if (year < minYear) minYear = year;
+      if (year > maxYear) maxYear = year;
+    } else {
+      continue;
+    }
+
+    // Get the total count for this hour
+    var total = parseInt(totalStr) || 0;
+    
+    // Aggregate by day (sum all hourly totals)
+    if (!dailyTotals[parsedDate]) {
+      dailyTotals[parsedDate] = 0;
+    }
+    dailyTotals[parsedDate] += total;
+  }
+
+  // Convert to format expected by visualization
+  for (var date in dailyTotals) {
+    finalData[date] = dailyTotals[date];
+  }
+
+  console.log("Date range: " + minYear + " to " + maxYear);
+  console.log("Total days with data: " + Object.keys(finalData).length);
   console.log(finalData);
 
-var values = [];
+  var values = [];
   for (var parsedDate in finalData) {
     values.push(finalData[parsedDate]);
   }
   console.log(values);
 
-  //var minDomain = d3.max(data);
-  //console.log(minDomain);
-  // var maxDomain = d3.max(data, function(d) {return +d});
-  // color.domain([200,4000]);
   color.domain(d3.extent(values));
 
+  // Update the calendar view with the actual year range
+  var thisyear = maxYear + 1;
+  
+  // Re-create the SVG elements with the correct year range
+  var svg = d3.select("div#time-series").selectAll("svg")
+      .data(d3.range(minYear, thisyear))
+    .enter().append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("class", "RdYlGn")
+    .append("g")
+      .attr("transform", "translate(" + ((width - cellSize * 53) / 2) + "," + (height - cellSize * 7 - 1) + ")");
 
+  svg.append("text")
+      .attr("transform", "translate(-6," + cellSize * 3.5 + ")rotate(-90)")
+      .style("text-anchor", "middle")
+      .style("fill", "#fff")
+      .style("font-size", "30px")
+      .text(function(d) { return d; });
+
+  var rect = svg.selectAll(".day")
+      .data(function(d) { return d3.timeDays(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+    .enter().append("rect")
+      .attr("class", "day")
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .attr("x", function(d) { return week(d) * cellSize; })
+      .attr("y", function(d) { return day(d) * cellSize; })
+      .datum(format);
+
+  rect.append("title")
+      .text(function(d) { return d; });
+
+  svg.selectAll(".month")
+      .data(function(d) { return d3.timeMonths(new Date(d, 0, 1), new Date(d + 1, 0, 1)); })
+    .enter().append("path")
+      .attr("class", "month")
+      .attr("d", monthPath);
 
   rect.filter(function(d) { return d in finalData; })
       .attr("class", function(d) { 
@@ -94,13 +133,15 @@ var values = [];
       .transition().duration(500)
       .style("opacity", 1)
     .select("title")
-      .text(function(d) { return d + ": " + finalData[d]; });  // How to add getDay() for day of week on mouseover?
+      .text(function(d) { return d + ": " + finalData[d]; });
 
   rect.filter(function(d) { return !(d in finalData); })
       .attr("class", "day-empty")
     .select("title")
       .text(function(d) { return d + ": No Data"; });  
 
+}).catch(function(error) {
+  console.error("Error loading CSV:", error);
 });
 
 function monthPath(t0) {
